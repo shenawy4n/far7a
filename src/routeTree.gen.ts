@@ -13,6 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminClientsRouteImport } from './routes/admin.clients'
+import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
+import { Route as AdminInvitationsIndexRouteImport } from './routes/admin.invitations.index'
+import { Route as AdminInvitationsIdRouteImport } from './routes/admin.invitations.$id'
+import { Route as AdminInvitationsNewRouteImport } from './routes/admin.invitations.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,31 +39,98 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminClientsRoute = AdminClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTemplatesRoute = AdminTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminInvitationsIndexRoute = AdminInvitationsIndexRouteImport.update({
+  id: '/invitations/',
+  path: '/invitations/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminInvitationsIdRoute = AdminInvitationsIdRouteImport.update({
+  id: '/invitations/$id',
+  path: '/invitations/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminInvitationsNewRoute = AdminInvitationsNewRouteImport.update({
+  id: '/invitations/new',
+  path: '/invitations/new',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/invitations/$id': typeof AdminInvitationsIdRoute
+  '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/invitations/': typeof AdminInvitationsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/invitations/$id': typeof AdminInvitationsIdRoute
+  '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/invitations': typeof AdminInvitationsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/invitations/$id': typeof AdminInvitationsIdRoute
+  '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/invitations/': typeof AdminInvitationsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/login' | '/admin/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/admin/clients'
+    | '/admin/templates'
+    | '/admin/'
+    | '/admin/invitations/$id'
+    | '/admin/invitations/new'
+    | '/admin/invitations/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/admin'
-  id: '__root__' | '/' | '/admin' | '/login' | '/admin/'
+  to:
+    | '/'
+    | '/login'
+    | '/admin/clients'
+    | '/admin/templates'
+    | '/admin'
+    | '/admin/invitations/$id'
+    | '/admin/invitations/new'
+    | '/admin/invitations'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/admin/clients'
+    | '/admin/templates'
+    | '/admin/'
+    | '/admin/invitations/$id'
+    | '/admin/invitations/new'
+    | '/admin/invitations/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -97,15 +169,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/clients': {
+      id: '/admin/clients'
+      path: '/clients'
+      fullPath: '/admin/clients'
+      preLoaderRoute: typeof AdminClientsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/templates': {
+      id: '/admin/templates'
+      path: '/templates'
+      fullPath: '/admin/templates'
+      preLoaderRoute: typeof AdminTemplatesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/invitations/': {
+      id: '/admin/invitations/'
+      path: '/invitations'
+      fullPath: '/admin/invitations/'
+      preLoaderRoute: typeof AdminInvitationsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/invitations/$id': {
+      id: '/admin/invitations/$id'
+      path: '/invitations/$id'
+      fullPath: '/admin/invitations/$id'
+      preLoaderRoute: typeof AdminInvitationsIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/invitations/new': {
+      id: '/admin/invitations/new'
+      path: '/invitations/new'
+      fullPath: '/admin/invitations/new'
+      preLoaderRoute: typeof AdminInvitationsNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminClientsRoute: typeof AdminClientsRoute
+  AdminTemplatesRoute: typeof AdminTemplatesRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminInvitationsIdRoute: typeof AdminInvitationsIdRoute
+  AdminInvitationsNewRoute: typeof AdminInvitationsNewRoute
+  AdminInvitationsIndexRoute: typeof AdminInvitationsIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminClientsRoute: AdminClientsRoute,
+  AdminTemplatesRoute: AdminTemplatesRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminInvitationsIdRoute: AdminInvitationsIdRoute,
+  AdminInvitationsNewRoute: AdminInvitationsNewRoute,
+  AdminInvitationsIndexRoute: AdminInvitationsIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
