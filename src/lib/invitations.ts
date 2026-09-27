@@ -1,0 +1,132 @@
+import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+export type Invitation = Database["public"]["Tables"]["invitations"]["Row"];
+export type InvitationInsert = Database["public"]["Tables"]["invitations"]["Insert"];
+export type Client = Database["public"]["Tables"]["clients"]["Row"];
+export type Template = Database["public"]["Tables"]["templates"]["Row"];
+export type InvitationStatus = Database["public"]["Enums"]["invitation_status"];
+export type EventType = Database["public"]["Enums"]["event_type"];
+
+export const EVENT_TYPES: EventType[] = ["wedding", "engagement", "birthday", "graduation", "other"];
+export const STATUSES: InvitationStatus[] = ["draft", "published", "archived"];
+
+export type InvitationWithRelations = Invitation & {
+  clients: Pick<Client, "id" | "full_name"> | null;
+  templates: Pick<Template, "id" | "name" | "slug"> | null;
+};
+
+const SELECT_WITH_RELATIONS =
+  "*, clients ( id, full_name ), templates ( id, name, slug )";
+
+function unwrap<T>({ data, error }: { data: T | null; error: { message: string } | null }): T {
+  if (error) throw new Error(error.message);
+  return data as T;
+}
+
+export async function listInvitations() {
+  return unwrap(
+    await supabase
+      .from("invitations")
+      .select(SELECT_WITH_RELATIONS)
+      .order("created_at", { ascending: false }),
+  ) as InvitationWithRelations[];
+}
+
+export async function getInvitation(id: string) {
+  return unwrap(
+    await supabase.from("invitations").select(SELECT_WITH_RELATIONS).eq("id", id).maybeSingle(),
+  ) as InvitationWithRelations | null;
+}
+
+export async function listClients() {
+  return unwrap(
+    await supabase.from("clients").select("*").order("created_at", { ascending: false }),
+  ) as Client[];
+}
+
+export async function listTemplates() {
+  return unwrap(
+    await supabase.from("templates").select("*").order("name", { ascending: true }),
+  ) as Template[];
+}
+
+export async function createClient(input: {
+  full_name: string;
+  phone?: string | null;
+  email?: string | null;
+  notes?: string | null;
+}) {
+  return unwrap(await supabase.from("clients").insert(input).select("*").single()) as Client;
+}
+
+export async function deleteClient(id: string) {
+  const { error } = await supabase.from("clients").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+export function slugBase(groom?: string | null, bride?: string | null, title?: string | null) {
+  const parts = [groom, bride].filter(Boolean).join("-");
+  return (parts || title || "invitation").toString();
+}
+
+export async function generateSlug(base: string) {
+  const { data, error } = await supabase.rpc("generate_invitation_slug", { _base: base });
+  if (error) throw new Error(error.message);
+  return data as string;
+}
+
+export async function createInvitation(input: Omit<InvitationInsert, "slug"> & { slug?: string }) {
+  const slug = input.slug || (await generateSlug(slugBase(input.groom_name, input.bride_name, input.title)));
+  return unwrap(
+    await supabase.from("invitations").insert({ ...input, slug }).select("*").single(),
+  ) as Invitation;
+}
+
+export async function updateInvitation(id: string, patch: Partial<InvitationInsert>) {
+  return unwrap(
+    await supabase.from("invitations").update(patch).eq("id", id).select("*").single(),
+  ) as Invitation;
+}
+
+export async function setStatus(id: string, status: InvitationStatus) {
+  const patch: Partial<InvitationInsert> = { status };
+  if (status !== "published") patch.published_at = null;
+  return updateInvitation(id, patch);
+}
+
+export async function deleteInvitation(id: string) {
+  const { error } = await supabase.from("invitations").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+export async function duplicateInvitation(id: string) {
+  const source = unwrap(
+    await supabase.from("invitations").select("*").eq("id", id).single(),
+  ) as Invitation;
+
+  const { id: _id, created_at, updated_at, published_at, slug, ...rest } = source;
+  void _id;
+  void created_at;
+  void updated_at;
+  void published_at;
+
+  const nextSlug = await generateSlug(slug);
+  return unwrap(
+    await supabase
+      .from("invitations")
+      .insert({ ...rest, slug: nextSlug, status: "draft", published_at: null })
+      .select("*")
+      .single(),
+  ) as Invitation;
+}
+
+export function publicUrl(slug: string) {
+  const origin = typeof window === "undefined" ? "" : window.location.origin;
+  return `${origin}/i/${slug}`;
+}
+
+export function coupleLabel(invitation: Pick<Invitation, "groom_name" | "bride_name" | "title">) {
+  const names = [invitation.groom_name, invitation.bride_name].filter(Boolean).join(" & ");
+  return names || invitation.title || "—";
+}
