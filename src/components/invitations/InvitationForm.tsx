@@ -98,7 +98,7 @@ export function InvitationForm({
   clients: Client[];
   templates: Template[];
   submitting?: boolean;
-  onSubmit: (values: InvitationFormValues) => void | Promise<void>;
+  onSubmit: (values: InvitationFormValues) => unknown;
   onCreateClient?: () => void;
   footerExtra?: ReactNode;
 }) {

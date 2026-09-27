@@ -19,7 +19,7 @@ export function ClientForm({
   submitting,
   onCancel,
 }: {
-  onSubmit: (values: ClientFormValues) => void | Promise<void>;
+  onSubmit: (values: ClientFormValues) => unknown;
   submitting?: boolean;
   onCancel?: () => void;
 }) {

@@ -138,7 +138,10 @@ function InvitationsPage() {
               <Copy className="size-4" />
               {t("duplicate")}
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" onClick={() => setPendingDelete(row)}>
+            <DropdownMenuItem
+              className="text-destructive focus:text-destructive"
+              onClick={() => setPendingDelete(row)}
+            >
               <Trash2 className="size-4" />
               {t("delete")}
             </DropdownMenuItem>
