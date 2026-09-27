@@ -1,0 +1,273 @@
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+
+export type Lang = "ar" | "en";
+
+const dict = {
+  ar: {
+    brand: "فرحة",
+    brandLatin: "Far7a",
+    tagline: "دعوات إلكترونية أنيقة لأجمل مناسباتكم",
+    signIn: "تسجيل الدخول",
+    signOut: "تسجيل الخروج",
+    email: "البريد الإلكتروني",
+    password: "كلمة المرور",
+    adminLogin: "دخول لوحة التحكم",
+    loginSubtitle: "هذه المنطقة مخصّصة لفريق الإدارة",
+    createAccount: "إنشاء حساب",
+    haveAccount: "لدي حساب بالفعل",
+    noAccount: "ليس لدي حساب",
+    fullName: "الاسم الكامل",
+    dashboard: "الرئيسية",
+    invitations: "الدعوات",
+    clients: "العملاء",
+    templates: "القوالب",
+    media: "الوسائط",
+    rsvp: "تأكيد الحضور",
+    analytics: "الإحصائيات",
+    settings: "الإعدادات",
+    comingSoon: "قريبًا",
+    comingSoonBody: "هذا القسم قيد التطوير وسيتوفر في مرحلة قادمة.",
+    totalInvitations: "إجمالي الدعوات",
+    published: "منشورة",
+    drafts: "مسودات",
+    archived: "مؤرشفة",
+    totalClients: "إجمالي العملاء",
+    recentInvitations: "أحدث الدعوات",
+    newInvitation: "دعوة جديدة",
+    search: "بحث",
+    status: "الحالة",
+    eventType: "نوع المناسبة",
+    all: "الكل",
+    couple: "العروسان",
+    date: "التاريخ",
+    template: "القالب",
+    createdAt: "تاريخ الإنشاء",
+    actions: "إجراءات",
+    view: "عرض",
+    edit: "تعديل",
+    duplicate: "نسخ",
+    delete: "حذف",
+    copyLink: "نسخ الرابط العام",
+    linkCopied: "تم نسخ الرابط",
+    save: "حفظ",
+    saveDraft: "حفظ كمسودة",
+    publish: "نشر",
+    unpublish: "إلغاء النشر",
+    archive: "أرشفة",
+    cancel: "إلغاء",
+    confirm: "تأكيد",
+    deleteConfirmTitle: "تأكيد الحذف",
+    deleteConfirmBody: "لا يمكن التراجع عن هذا الإجراء.",
+    client: "العميل",
+    selectClient: "اختر عميلاً",
+    newClient: "عميل جديد",
+    phone: "الهاتف",
+    notes: "ملاحظات",
+    groomName: "اسم العريس",
+    brideName: "اسم العروس",
+    groomFamily: "عائلة العريس",
+    brideFamily: "عائلة العروس",
+    event: "المناسبة",
+    time: "الوقت",
+    venueName: "اسم القاعة",
+    venueAddress: "العنوان",
+    mapsUrl: "رابط خريطة جوجل",
+    logistics: "معلومات إضافية للحضور",
+    transportation: "معلومات المواصلات",
+    parking: "معلومات مواقف السيارات",
+    additional: "ملاحظات إضافية",
+    additionalNotes: "ملاحظات إضافية",
+    invitationTitle: "عنوان الدعوة",
+    selectTemplate: "اختر القالب",
+    noTemplate: "بدون قالب",
+    publicLink: "الرابط العام",
+    emptyInvitations: "لا توجد دعوات بعد",
+    emptyInvitationsBody: "ابدأ بإنشاء أول دعوة إلكترونية.",
+    emptyClients: "لا يوجد عملاء بعد",
+    emptyClientsBody: "أضف أول عميل لبدء إنشاء الدعوات.",
+    addClient: "إضافة عميل",
+    saved: "تم الحفظ",
+    deleted: "تم الحذف",
+    duplicated: "تم إنشاء نسخة",
+    loading: "جارٍ التحميل…",
+    wedding: "زفاف",
+    engagement: "خطوبة",
+    birthday: "عيد ميلاد",
+    graduation: "تخرّج",
+    other: "أخرى",
+    draft: "مسودة",
+    unavailable: "الدعوة غير متاحة",
+    unavailableBody: "هذا الرابط غير صحيح أو لم يتم نشر الدعوة بعد.",
+    youAreInvited: "يتشرّفان بدعوتكم",
+    openMaps: "الاتجاهات على الخريطة",
+    venue: "المكان",
+    transportationInfo: "المواصلات",
+    parkingInfo: "مواقف السيارات",
+    language: "اللغة",
+    account: "الحساب",
+    profile: "الملف الشخصي",
+    goToAdmin: "لوحة التحكم",
+    required: "هذا الحقل مطلوب",
+    slugHint: "يُنشأ الرابط تلقائيًا من أسماء العروسين",
+    back: "رجوع",
+    editInvitation: "تعديل الدعوة",
+    createInvitation: "إنشاء دعوة",
+    previewPublic: "معاينة الصفحة العامة",
+  },
+  en: {
+    brand: "Far7a",
+    brandLatin: "Far7a",
+    tagline: "Elegant digital invitations for your happiest occasions",
+    signIn: "Sign in",
+    signOut: "Sign out",
+    email: "Email",
+    password: "Password",
+    adminLogin: "Admin sign in",
+    loginSubtitle: "This area is for the admin team only",
+    createAccount: "Create account",
+    haveAccount: "I already have an account",
+    noAccount: "I don't have an account",
+    fullName: "Full name",
+    dashboard: "Dashboard",
+    invitations: "Invitations",
+    clients: "Clients",
+    templates: "Templates",
+    media: "Media",
+    rsvp: "RSVP",
+    analytics: "Analytics",
+    settings: "Settings",
+    comingSoon: "Coming soon",
+    comingSoonBody: "This section is not built yet and will arrive in a later phase.",
+    totalInvitations: "Total invitations",
+    published: "Published",
+    drafts: "Drafts",
+    archived: "Archived",
+    totalClients: "Total clients",
+    recentInvitations: "Recent invitations",
+    newInvitation: "New invitation",
+    search: "Search",
+    status: "Status",
+    eventType: "Event type",
+    all: "All",
+    couple: "Couple",
+    date: "Date",
+    template: "Template",
+    createdAt: "Created",
+    actions: "Actions",
+    view: "View",
+    edit: "Edit",
+    duplicate: "Duplicate",
+    delete: "Delete",
+    copyLink: "Copy public link",
+    linkCopied: "Link copied",
+    save: "Save",
+    saveDraft: "Save as draft",
+    publish: "Publish",
+    unpublish: "Unpublish",
+    archive: "Archive",
+    cancel: "Cancel",
+    confirm: "Confirm",
+    deleteConfirmTitle: "Confirm delete",
+    deleteConfirmBody: "This action cannot be undone.",
+    client: "Client",
+    selectClient: "Select a client",
+    newClient: "New client",
+    phone: "Phone",
+    notes: "Notes",
+    groomName: "Groom name",
+    brideName: "Bride name",
+    groomFamily: "Groom family",
+    brideFamily: "Bride family",
+    event: "Event",
+    time: "Time",
+    venueName: "Venue name",
+    venueAddress: "Address",
+    mapsUrl: "Google Maps URL",
+    logistics: "Guest logistics",
+    transportation: "Transportation information",
+    parking: "Parking information",
+    additional: "Additional",
+    additionalNotes: "Additional notes",
+    invitationTitle: "Invitation title",
+    selectTemplate: "Select template",
+    noTemplate: "No template",
+    publicLink: "Public link",
+    emptyInvitations: "No invitations yet",
+    emptyInvitationsBody: "Create your first digital invitation to get started.",
+    emptyClients: "No clients yet",
+    emptyClientsBody: "Add your first client to start creating invitations.",
+    addClient: "Add client",
+    saved: "Saved",
+    deleted: "Deleted",
+    duplicated: "Copy created",
+    loading: "Loading…",
+    wedding: "Wedding",
+    engagement: "Engagement",
+    birthday: "Birthday",
+    graduation: "Graduation",
+    other: "Other",
+    draft: "Draft",
+    unavailable: "Invitation unavailable",
+    unavailableBody: "This link is invalid or the invitation is not published yet.",
+    youAreInvited: "You are invited",
+    openMaps: "Open in Maps",
+    venue: "Venue",
+    transportationInfo: "Transportation",
+    parkingInfo: "Parking",
+    language: "Language",
+    account: "Account",
+    profile: "Profile",
+    goToAdmin: "Admin panel",
+    required: "This field is required",
+    slugHint: "The public link is generated from the couple's names",
+    back: "Back",
+    editInvitation: "Edit invitation",
+    createInvitation: "Create invitation",
+    previewPublic: "Preview public page",
+  },
+} as const;
+
+export type TKey = keyof (typeof dict)["en"];
+
+type I18nValue = {
+  lang: Lang;
+  dir: "rtl" | "ltr";
+  setLang: (lang: Lang) => void;
+  t: (key: TKey) => string;
+};
+
+const I18nContext = createContext<I18nValue | null>(null);
+const STORAGE_KEY = "far7a-lang";
+
+export function I18nProvider({ children }: { children: ReactNode }) {
+  const [lang, setLangState] = useState<Lang>("ar");
+
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === "ar" || stored === "en") setLangState(stored);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  }, [lang]);
+
+  const setLang = useCallback((next: Lang) => {
+    setLangState(next);
+    localStorage.setItem(STORAGE_KEY, next);
+  }, []);
+
+  const t = useCallback((key: TKey) => dict[lang][key] ?? dict.en[key], [lang]);
+
+  return (
+    <I18nContext.Provider value={{ lang, dir: lang === "ar" ? "rtl" : "ltr", setLang, t }}>
+      {children}
+    </I18nContext.Provider>
+  );
+}
+
+export function useI18n() {
+  const ctx = useContext(I18nContext);
+  if (!ctx) throw new Error("useI18n must be used inside I18nProvider");
+  return ctx;
+}

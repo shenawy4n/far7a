@@ -10,33 +10,194 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as AdminClientsRouteImport } from './routes/admin.clients'
+import { Route as AdminMediaRouteImport } from './routes/admin.media'
+import { Route as AdminRsvpRouteImport } from './routes/admin.rsvp'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
+import { Route as ISlugRouteImport } from './routes/i.$slug'
+import { Route as AdminInvitationsIndexRouteImport } from './routes/admin.invitations.index'
+import { Route as AdminInvitationsIdRouteImport } from './routes/admin.invitations.$id'
+import { Route as AdminInvitationsNewRouteImport } from './routes/admin.invitations.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminClientsRoute = AdminClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMediaRoute = AdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRsvpRoute = AdminRsvpRouteImport.update({
+  id: '/rsvp',
+  path: '/rsvp',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTemplatesRoute = AdminTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ISlugRoute = ISlugRouteImport.update({
+  id: '/i/$slug',
+  path: '/i/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminInvitationsIndexRoute = AdminInvitationsIndexRouteImport.update({
+  id: '/invitations/',
+  path: '/invitations/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminInvitationsIdRoute = AdminInvitationsIdRouteImport.update({
+  id: '/invitations/$id',
+  path: '/invitations/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminInvitationsNewRoute = AdminInvitationsNewRouteImport.update({
+  id: '/invitations/new',
+  path: '/invitations/new',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/rsvp': typeof AdminRsvpRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/templates': typeof AdminTemplatesRoute
+  '/i/$slug': typeof ISlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/invitations/$id': typeof AdminInvitationsIdRoute
+  '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/invitations/': typeof AdminInvitationsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/rsvp': typeof AdminRsvpRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/templates': typeof AdminTemplatesRoute
+  '/i/$slug': typeof ISlugRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/invitations/$id': typeof AdminInvitationsIdRoute
+  '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/invitations': typeof AdminInvitationsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/rsvp': typeof AdminRsvpRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/templates': typeof AdminTemplatesRoute
+  '/i/$slug': typeof ISlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/invitations/$id': typeof AdminInvitationsIdRoute
+  '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/invitations/': typeof AdminInvitationsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/admin/analytics'
+    | '/admin/clients'
+    | '/admin/media'
+    | '/admin/rsvp'
+    | '/admin/settings'
+    | '/admin/templates'
+    | '/i/$slug'
+    | '/admin/'
+    | '/admin/invitations/$id'
+    | '/admin/invitations/new'
+    | '/admin/invitations/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/admin/analytics'
+    | '/admin/clients'
+    | '/admin/media'
+    | '/admin/rsvp'
+    | '/admin/settings'
+    | '/admin/templates'
+    | '/i/$slug'
+    | '/admin'
+    | '/admin/invitations/$id'
+    | '/admin/invitations/new'
+    | '/admin/invitations'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/admin/analytics'
+    | '/admin/clients'
+    | '/admin/media'
+    | '/admin/rsvp'
+    | '/admin/settings'
+    | '/admin/templates'
+    | '/i/$slug'
+    | '/admin/'
+    | '/admin/invitations/$id'
+    | '/admin/invitations/new'
+    | '/admin/invitations/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  ISlugRoute: typeof ISlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +209,133 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/clients': {
+      id: '/admin/clients'
+      path: '/clients'
+      fullPath: '/admin/clients'
+      preLoaderRoute: typeof AdminClientsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/media': {
+      id: '/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminMediaRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/rsvp': {
+      id: '/admin/rsvp'
+      path: '/rsvp'
+      fullPath: '/admin/rsvp'
+      preLoaderRoute: typeof AdminRsvpRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/templates': {
+      id: '/admin/templates'
+      path: '/templates'
+      fullPath: '/admin/templates'
+      preLoaderRoute: typeof AdminTemplatesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/i/$slug': {
+      id: '/i/$slug'
+      path: '/i/$slug'
+      fullPath: '/i/$slug'
+      preLoaderRoute: typeof ISlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/invitations/': {
+      id: '/admin/invitations/'
+      path: '/invitations'
+      fullPath: '/admin/invitations/'
+      preLoaderRoute: typeof AdminInvitationsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/invitations/$id': {
+      id: '/admin/invitations/$id'
+      path: '/invitations/$id'
+      fullPath: '/admin/invitations/$id'
+      preLoaderRoute: typeof AdminInvitationsIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/invitations/new': {
+      id: '/admin/invitations/new'
+      path: '/invitations/new'
+      fullPath: '/admin/invitations/new'
+      preLoaderRoute: typeof AdminInvitationsNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminClientsRoute: typeof AdminClientsRoute
+  AdminMediaRoute: typeof AdminMediaRoute
+  AdminRsvpRoute: typeof AdminRsvpRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminTemplatesRoute: typeof AdminTemplatesRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminInvitationsIdRoute: typeof AdminInvitationsIdRoute
+  AdminInvitationsNewRoute: typeof AdminInvitationsNewRoute
+  AdminInvitationsIndexRoute: typeof AdminInvitationsIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminClientsRoute: AdminClientsRoute,
+  AdminMediaRoute: AdminMediaRoute,
+  AdminRsvpRoute: AdminRsvpRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminTemplatesRoute: AdminTemplatesRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminInvitationsIdRoute: AdminInvitationsIdRoute,
+  AdminInvitationsNewRoute: AdminInvitationsNewRoute,
+  AdminInvitationsIndexRoute: AdminInvitationsIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  LoginRoute: LoginRoute,
+  ISlugRoute: ISlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
