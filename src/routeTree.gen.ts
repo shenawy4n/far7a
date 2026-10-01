@@ -20,6 +20,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
 import { Route as ISlugRouteImport } from './routes/i.$slug'
 import { Route as AdminClientsIndexRouteImport } from './routes/admin.clients.index'
+import { Route as AdminClientsIdRouteImport } from './routes/admin.clients.$id'
 import { Route as AdminInvitationsIndexRouteImport } from './routes/admin.invitations.index'
 import { Route as AdminInvitationsIdRouteImport } from './routes/admin.invitations.$id'
 import { Route as AdminInvitationsNewRouteImport } from './routes/admin.invitations.new'
@@ -80,6 +81,11 @@ const AdminClientsIndexRoute = AdminClientsIndexRouteImport.update({
   path: '/clients/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminClientsIdRoute = AdminClientsIdRouteImport.update({
+  id: '/clients/$id',
+  path: '/clients/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminInvitationsIndexRoute = AdminInvitationsIndexRouteImport.update({
   id: '/invitations/',
   path: '/invitations/',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/admin/templates': typeof AdminTemplatesRoute
   '/i/$slug': typeof ISlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/invitations/$id': typeof AdminInvitationsIdRoute
   '/admin/invitations/new': typeof AdminInvitationsNewRoute
   '/admin/clients/': typeof AdminClientsIndexRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/admin/templates': typeof AdminTemplatesRoute
   '/i/$slug': typeof ISlugRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/invitations/$id': typeof AdminInvitationsIdRoute
   '/admin/invitations/new': typeof AdminInvitationsNewRoute
   '/admin/clients': typeof AdminClientsIndexRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/admin/templates': typeof AdminTemplatesRoute
   '/i/$slug': typeof ISlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/invitations/$id': typeof AdminInvitationsIdRoute
   '/admin/invitations/new': typeof AdminInvitationsNewRoute
   '/admin/clients/': typeof AdminClientsIndexRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/admin/templates'
     | '/i/$slug'
     | '/admin/'
+    | '/admin/clients/$id'
     | '/admin/invitations/$id'
     | '/admin/invitations/new'
     | '/admin/clients/'
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/admin/templates'
     | '/i/$slug'
     | '/admin'
+    | '/admin/clients/$id'
     | '/admin/invitations/$id'
     | '/admin/invitations/new'
     | '/admin/clients'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/admin/templates'
     | '/i/$slug'
     | '/admin/'
+    | '/admin/clients/$id'
     | '/admin/invitations/$id'
     | '/admin/invitations/new'
     | '/admin/clients/'
@@ -292,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminClientsIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/clients/$id': {
+      id: '/admin/clients/$id'
+      path: '/clients/$id'
+      fullPath: '/admin/clients/$id'
+      preLoaderRoute: typeof AdminClientsIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/invitations/': {
       id: '/admin/invitations/'
       path: '/invitations'
@@ -330,6 +349,7 @@ interface AdminRouteChildren {
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminTemplatesRoute: typeof AdminTemplatesRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminClientsIdRoute: typeof AdminClientsIdRoute
   AdminInvitationsIdRoute: typeof AdminInvitationsIdRoute
   AdminInvitationsNewRoute: typeof AdminInvitationsNewRoute
   AdminClientsIndexRoute: typeof AdminClientsIndexRoute
@@ -344,6 +364,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSettingsRoute: AdminSettingsRoute,
   AdminTemplatesRoute: AdminTemplatesRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminClientsIdRoute: AdminClientsIdRoute,
   AdminInvitationsIdRoute: AdminInvitationsIdRoute,
   AdminInvitationsNewRoute: AdminInvitationsNewRoute,
   AdminClientsIndexRoute: AdminClientsIndexRoute,
