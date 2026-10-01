@@ -14,15 +14,17 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
-import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminRsvpRouteImport } from './routes/admin.rsvp'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
 import { Route as ISlugRouteImport } from './routes/i.$slug'
+import { Route as AdminClientsIndexRouteImport } from './routes/admin.clients.index'
+import { Route as AdminClientsIdRouteImport } from './routes/admin.clients.$id'
 import { Route as AdminInvitationsIndexRouteImport } from './routes/admin.invitations.index'
 import { Route as AdminInvitationsIdRouteImport } from './routes/admin.invitations.$id'
 import { Route as AdminInvitationsNewRouteImport } from './routes/admin.invitations.new'
+import { Route as AdminInvitationsIdPreviewRouteImport } from './routes/admin.invitations.$id_.preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -47,11 +49,6 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminClientsRoute = AdminClientsRouteImport.update({
-  id: '/clients',
-  path: '/clients',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminMediaRoute = AdminMediaRouteImport.update({
@@ -79,6 +76,16 @@ const ISlugRoute = ISlugRouteImport.update({
   path: '/i/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminClientsIndexRoute = AdminClientsIndexRouteImport.update({
+  id: '/clients/',
+  path: '/clients/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminClientsIdRoute = AdminClientsIdRouteImport.update({
+  id: '/clients/$id',
+  path: '/clients/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminInvitationsIndexRoute = AdminInvitationsIndexRouteImport.update({
   id: '/invitations/',
   path: '/invitations/',
@@ -94,37 +101,47 @@ const AdminInvitationsNewRoute = AdminInvitationsNewRouteImport.update({
   path: '/invitations/new',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminInvitationsIdPreviewRoute =
+  AdminInvitationsIdPreviewRouteImport.update({
+    id: '/invitations/$id_/preview',
+    path: '/invitations/$id/preview',
+    getParentRoute: () => AdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/clients': typeof AdminClientsRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/rsvp': typeof AdminRsvpRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/i/$slug': typeof ISlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/invitations/$id': typeof AdminInvitationsIdRoute
   '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/clients/': typeof AdminClientsIndexRoute
   '/admin/invitations/': typeof AdminInvitationsIndexRoute
+  '/admin/invitations/$id/preview': typeof AdminInvitationsIdPreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/clients': typeof AdminClientsRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/rsvp': typeof AdminRsvpRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/i/$slug': typeof ISlugRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/invitations/$id': typeof AdminInvitationsIdRoute
   '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/clients': typeof AdminClientsIndexRoute
   '/admin/invitations': typeof AdminInvitationsIndexRoute
+  '/admin/invitations/$id/preview': typeof AdminInvitationsIdPreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -132,16 +149,18 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/clients': typeof AdminClientsRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/rsvp': typeof AdminRsvpRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/i/$slug': typeof ISlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/invitations/$id': typeof AdminInvitationsIdRoute
   '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/clients/': typeof AdminClientsIndexRoute
   '/admin/invitations/': typeof AdminInvitationsIndexRoute
+  '/admin/invitations/$id_/preview': typeof AdminInvitationsIdPreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -150,47 +169,53 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/admin/analytics'
-    | '/admin/clients'
     | '/admin/media'
     | '/admin/rsvp'
     | '/admin/settings'
     | '/admin/templates'
     | '/i/$slug'
     | '/admin/'
+    | '/admin/clients/$id'
     | '/admin/invitations/$id'
     | '/admin/invitations/new'
+    | '/admin/clients/'
     | '/admin/invitations/'
+    | '/admin/invitations/$id/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/admin/analytics'
-    | '/admin/clients'
     | '/admin/media'
     | '/admin/rsvp'
     | '/admin/settings'
     | '/admin/templates'
     | '/i/$slug'
     | '/admin'
+    | '/admin/clients/$id'
     | '/admin/invitations/$id'
     | '/admin/invitations/new'
+    | '/admin/clients'
     | '/admin/invitations'
+    | '/admin/invitations/$id/preview'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/login'
     | '/admin/analytics'
-    | '/admin/clients'
     | '/admin/media'
     | '/admin/rsvp'
     | '/admin/settings'
     | '/admin/templates'
     | '/i/$slug'
     | '/admin/'
+    | '/admin/clients/$id'
     | '/admin/invitations/$id'
     | '/admin/invitations/new'
+    | '/admin/clients/'
     | '/admin/invitations/'
+    | '/admin/invitations/$id_/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -237,13 +262,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/clients': {
-      id: '/admin/clients'
-      path: '/clients'
-      fullPath: '/admin/clients'
-      preLoaderRoute: typeof AdminClientsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/media': {
       id: '/admin/media'
       path: '/media'
@@ -279,6 +297,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ISlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/clients/': {
+      id: '/admin/clients/'
+      path: '/clients'
+      fullPath: '/admin/clients/'
+      preLoaderRoute: typeof AdminClientsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/clients/$id': {
+      id: '/admin/clients/$id'
+      path: '/clients/$id'
+      fullPath: '/admin/clients/$id'
+      preLoaderRoute: typeof AdminClientsIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/invitations/': {
       id: '/admin/invitations/'
       path: '/invitations'
@@ -300,33 +332,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInvitationsNewRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/invitations/$id_/preview': {
+      id: '/admin/invitations/$id_/preview'
+      path: '/invitations/$id/preview'
+      fullPath: '/admin/invitations/$id/preview'
+      preLoaderRoute: typeof AdminInvitationsIdPreviewRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
-  AdminClientsRoute: typeof AdminClientsRoute
   AdminMediaRoute: typeof AdminMediaRoute
   AdminRsvpRoute: typeof AdminRsvpRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminTemplatesRoute: typeof AdminTemplatesRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminClientsIdRoute: typeof AdminClientsIdRoute
   AdminInvitationsIdRoute: typeof AdminInvitationsIdRoute
   AdminInvitationsNewRoute: typeof AdminInvitationsNewRoute
+  AdminClientsIndexRoute: typeof AdminClientsIndexRoute
   AdminInvitationsIndexRoute: typeof AdminInvitationsIndexRoute
+  AdminInvitationsIdPreviewRoute: typeof AdminInvitationsIdPreviewRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
-  AdminClientsRoute: AdminClientsRoute,
   AdminMediaRoute: AdminMediaRoute,
   AdminRsvpRoute: AdminRsvpRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminTemplatesRoute: AdminTemplatesRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminClientsIdRoute: AdminClientsIdRoute,
   AdminInvitationsIdRoute: AdminInvitationsIdRoute,
   AdminInvitationsNewRoute: AdminInvitationsNewRoute,
+  AdminClientsIndexRoute: AdminClientsIndexRoute,
   AdminInvitationsIndexRoute: AdminInvitationsIndexRoute,
+  AdminInvitationsIdPreviewRoute: AdminInvitationsIdPreviewRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

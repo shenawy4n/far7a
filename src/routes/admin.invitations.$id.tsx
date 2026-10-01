@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Archive, ExternalLink, Link2, Send, Undo2 } from "lucide-react";
+import { Archive, ExternalLink, Eye, Link2, Send, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { AdminLayout } from "@/components/admin/AdminLayout";
@@ -113,7 +113,7 @@ function EditInvitationPage() {
               onClick={() => statusMutation.mutate("published")}
             >
               <Send className="size-4" />
-              {t("publish")}
+              {row.status === "archived" ? t("restorePublish") : t("publish")}
             </Button>
           ) : (
             <Button
@@ -139,6 +139,12 @@ function EditInvitationPage() {
               {t("archive")}
             </Button>
           ) : null}
+          <Button asChild size="sm" variant="ghost" className="gap-2">
+            <Link to="/admin/invitations/$id/preview" params={{ id: row.id }}>
+              <Eye className="size-4" />
+              {t("preview")}
+            </Link>
+          </Button>
           {row.status === "published" ? (
             <Button asChild size="sm" variant="ghost" className="gap-2">
               <a href={`/i/${row.slug}`} target="_blank" rel="noreferrer">

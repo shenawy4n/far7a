@@ -1,38 +1,7 @@
 import { CalendarDays, Clock, Car, MapPin, ParkingCircle, StickyNote } from "lucide-react";
-import type { PublicInvitation, PublicSection } from "@/lib/public-invitation.functions";
+import { formatDate, formatTime, type IconType, type TemplateProps } from "./shared";
 
-function formatDate(date: string | null) {
-  if (!date) return null;
-  try {
-    return new Intl.DateTimeFormat("ar-EG", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(new Date(`${date}T00:00:00`));
-  } catch {
-    return date;
-  }
-}
-
-function formatTime(time: string | null) {
-  if (!time) return null;
-  const [h, m] = time.split(":");
-  const hour = Number(h);
-  const suffix = hour >= 12 ? "م" : "ص";
-  const display = hour % 12 === 0 ? 12 : hour % 12;
-  return `${display}:${m ?? "00"} ${suffix}`;
-}
-
-function InfoRow({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof MapPin;
-  label: string;
-  value: string;
-}) {
+function InfoRow({ icon: Icon, label, value }: { icon: IconType; label: string; value: string }) {
   return (
     <div className="flex gap-3 rounded-xl border border-border bg-card p-4 text-start">
       <Icon className="mt-0.5 size-5 shrink-0 text-primary" />
@@ -44,13 +13,8 @@ function InfoRow({
   );
 }
 
-export function PublicInvitationLayout({
-  invitation,
-  sections,
-}: {
-  invitation: PublicInvitation;
-  sections: PublicSection[];
-}) {
+/** Template "classic-gold": centered, ornamental, gold rules. */
+export function ClassicGoldTemplate({ invitation, sections }: TemplateProps) {
   const date = formatDate(invitation.event_date);
   const time = formatTime(invitation.event_time);
   const names = [invitation.groom_name, invitation.bride_name].filter(Boolean);
