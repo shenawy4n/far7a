@@ -14,12 +14,12 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
-import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminRsvpRouteImport } from './routes/admin.rsvp'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
 import { Route as ISlugRouteImport } from './routes/i.$slug'
+import { Route as AdminClientsIndexRouteImport } from './routes/admin.clients.index'
 import { Route as AdminInvitationsIndexRouteImport } from './routes/admin.invitations.index'
 import { Route as AdminInvitationsIdRouteImport } from './routes/admin.invitations.$id'
 import { Route as AdminInvitationsNewRouteImport } from './routes/admin.invitations.new'
@@ -49,11 +49,6 @@ const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminClientsRoute = AdminClientsRouteImport.update({
-  id: '/clients',
-  path: '/clients',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminMediaRoute = AdminMediaRouteImport.update({
   id: '/media',
   path: '/media',
@@ -79,6 +74,11 @@ const ISlugRoute = ISlugRouteImport.update({
   path: '/i/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminClientsIndexRoute = AdminClientsIndexRouteImport.update({
+  id: '/clients/',
+  path: '/clients/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminInvitationsIndexRoute = AdminInvitationsIndexRouteImport.update({
   id: '/invitations/',
   path: '/invitations/',
@@ -100,7 +100,6 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/clients': typeof AdminClientsRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/rsvp': typeof AdminRsvpRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -109,13 +108,13 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/admin/invitations/$id': typeof AdminInvitationsIdRoute
   '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/clients/': typeof AdminClientsIndexRoute
   '/admin/invitations/': typeof AdminInvitationsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/clients': typeof AdminClientsRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/rsvp': typeof AdminRsvpRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -124,6 +123,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/invitations/$id': typeof AdminInvitationsIdRoute
   '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/clients': typeof AdminClientsIndexRoute
   '/admin/invitations': typeof AdminInvitationsIndexRoute
 }
 export interface FileRoutesById {
@@ -132,7 +132,6 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/clients': typeof AdminClientsRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/rsvp': typeof AdminRsvpRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -141,6 +140,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/admin/invitations/$id': typeof AdminInvitationsIdRoute
   '/admin/invitations/new': typeof AdminInvitationsNewRoute
+  '/admin/clients/': typeof AdminClientsIndexRoute
   '/admin/invitations/': typeof AdminInvitationsIndexRoute
 }
 export interface FileRouteTypes {
@@ -150,7 +150,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/admin/analytics'
-    | '/admin/clients'
     | '/admin/media'
     | '/admin/rsvp'
     | '/admin/settings'
@@ -159,13 +158,13 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/invitations/$id'
     | '/admin/invitations/new'
+    | '/admin/clients/'
     | '/admin/invitations/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/admin/analytics'
-    | '/admin/clients'
     | '/admin/media'
     | '/admin/rsvp'
     | '/admin/settings'
@@ -174,6 +173,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/invitations/$id'
     | '/admin/invitations/new'
+    | '/admin/clients'
     | '/admin/invitations'
   id:
     | '__root__'
@@ -181,7 +181,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/admin/analytics'
-    | '/admin/clients'
     | '/admin/media'
     | '/admin/rsvp'
     | '/admin/settings'
@@ -190,6 +189,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/invitations/$id'
     | '/admin/invitations/new'
+    | '/admin/clients/'
     | '/admin/invitations/'
   fileRoutesById: FileRoutesById
 }
@@ -237,13 +237,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/clients': {
-      id: '/admin/clients'
-      path: '/clients'
-      fullPath: '/admin/clients'
-      preLoaderRoute: typeof AdminClientsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/media': {
       id: '/admin/media'
       path: '/media'
@@ -279,6 +272,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ISlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/clients/': {
+      id: '/admin/clients/'
+      path: '/clients'
+      fullPath: '/admin/clients/'
+      preLoaderRoute: typeof AdminClientsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/invitations/': {
       id: '/admin/invitations/'
       path: '/invitations'
@@ -305,7 +305,6 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
-  AdminClientsRoute: typeof AdminClientsRoute
   AdminMediaRoute: typeof AdminMediaRoute
   AdminRsvpRoute: typeof AdminRsvpRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -313,12 +312,12 @@ interface AdminRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AdminInvitationsIdRoute: typeof AdminInvitationsIdRoute
   AdminInvitationsNewRoute: typeof AdminInvitationsNewRoute
+  AdminClientsIndexRoute: typeof AdminClientsIndexRoute
   AdminInvitationsIndexRoute: typeof AdminInvitationsIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
-  AdminClientsRoute: AdminClientsRoute,
   AdminMediaRoute: AdminMediaRoute,
   AdminRsvpRoute: AdminRsvpRoute,
   AdminSettingsRoute: AdminSettingsRoute,
@@ -326,6 +325,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminInvitationsIdRoute: AdminInvitationsIdRoute,
   AdminInvitationsNewRoute: AdminInvitationsNewRoute,
+  AdminClientsIndexRoute: AdminClientsIndexRoute,
   AdminInvitationsIndexRoute: AdminInvitationsIndexRoute,
 }
 

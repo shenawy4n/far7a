@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useI18n } from "@/lib/i18n";
 import { createClient, deleteClient, listClients, type Client } from "@/lib/invitations";
 
-export const Route = createFileRoute("/admin/clients")({
+export const Route = createFileRoute("/admin/clients/")({
   component: ClientsPage,
 });
 
