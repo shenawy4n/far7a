@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CalendarX } from "lucide-react";
 
 import { getPublicInvitation } from "@/lib/public-invitation.functions";
-import { PublicInvitationLayout } from "@/components/public/PublicInvitationLayout";
+import { InvitationRenderer } from "@/components/public/InvitationRenderer";
 
 export const Route = createFileRoute("/i/$slug")({
   loader: ({ params }) => getPublicInvitation({ data: { slug: params.slug } }),
@@ -54,5 +54,5 @@ function Unavailable() {
 function PublicInvitationPage() {
   const { invitation, sections } = Route.useLoaderData();
   if (!invitation) return <Unavailable />;
-  return <PublicInvitationLayout invitation={invitation} sections={sections} />;
+  return <InvitationRenderer invitation={invitation} sections={sections} />;
 }
