@@ -15,7 +15,7 @@ const TEMPLATES: Record<string, ComponentType<TemplateProps>> = {
 const DEFAULT_TEMPLATE = "classic-gold";
 
 export function resolveTemplate(slug: string | null | undefined) {
-  return TEMPLATES[slug ?? ""] ?? TEMPLATES[DEFAULT_TEMPLATE];
+  return TEMPLATES[slug ?? ""] ?? TEMPLATES[DEFAULT_TEMPLATE] ?? ClassicGoldTemplate;
 }
 
 /** The single invitation renderer used by both the public page and the admin preview. */

@@ -23,7 +23,7 @@ export function ClientForm({
   onSubmit: (values: ClientFormValues) => unknown;
   submitting?: boolean;
   onCancel?: () => void;
-  initial?: ClientFormValues;
+  initial?: ClientFormValues | undefined;
 }) {
   const { t } = useI18n();
   const [values, setValues] = useState<ClientFormValues>(initial ?? EMPTY);

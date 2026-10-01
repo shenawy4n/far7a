@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useI18n } from "@/lib/i18n";
 import { getInvitation, listVisibleSections, toPublicShape } from "@/lib/invitations";
-import type { PublicSection } from "@/lib/public-invitation.functions";
+import type { PublicInvitation, PublicSection } from "@/lib/public-invitation.functions";
 
 // Lives under /admin (auth-gated layout); data is read with the admin's session, so RLS
 // (is_admin) is the gate. Not reachable anonymously.
@@ -47,7 +47,7 @@ function PreviewPage() {
         </div>
       ) : row ? (
         <InvitationRenderer
-          invitation={toPublicShape(row)}
+          invitation={toPublicShape(row) as PublicInvitation}
           sections={(sections.data ?? []) as PublicSection[]}
         />
       ) : (
