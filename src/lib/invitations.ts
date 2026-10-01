@@ -65,6 +65,66 @@ export async function deleteClient(id: string) {
   if (error) throw new Error(error.message);
 }
 
+export async function getClient(id: string) {
+  return unwrap(await supabase.from("clients").select("*").eq("id", id).maybeSingle()) as Client | null;
+}
+
+export async function updateClient(
+  id: string,
+  patch: { full_name: string; phone: string | null; email: string | null; notes: string | null },
+) {
+  return unwrap(
+    await supabase.from("clients").update(patch).eq("id", id).select("*").single(),
+  ) as Client;
+}
+
+export async function listInvitationsByClient(clientId: string) {
+  return unwrap(
+    await supabase
+      .from("invitations")
+      .select(SELECT_WITH_RELATIONS)
+      .eq("client_id", clientId)
+      .order("created_at", { ascending: false }),
+  ) as InvitationWithRelations[];
+}
+
+export async function listVisibleSections(invitationId: string) {
+  return unwrap(
+    await supabase
+      .from("invitation_sections")
+      .select("section_type, title, content, sort_order, settings")
+      .eq("invitation_id", invitationId)
+      .eq("is_visible", true)
+      .order("sort_order"),
+  );
+}
+
+/**
+ * Project an admin invitation row onto the public data contract, so the admin
+ * preview feeds the exact same renderer as /i/:slug (no client/admin fields).
+ */
+export function toPublicShape(row: InvitationWithRelations) {
+  return {
+    slug: row.slug,
+    title: row.title,
+    event_type: row.event_type,
+    groom_name: row.groom_name,
+    bride_name: row.bride_name,
+    groom_family: row.groom_family,
+    bride_family: row.bride_family,
+    event_date: row.event_date,
+    event_time: row.event_time,
+    venue_name: row.venue_name,
+    venue_address: row.venue_address,
+    maps_url: row.maps_url,
+    transportation_info: row.transportation_info,
+    parking_info: row.parking_info,
+    additional_notes: row.additional_notes,
+    cover_image_url: row.cover_image_url,
+    template_slug: row.templates?.slug ?? null,
+  };
+}
+
 export function slugBase(groom?: string | null, bride?: string | null, title?: string | null) {
   const parts = [groom, bride].filter(Boolean).join("-");
   return (parts || title || "invitation").toString();
