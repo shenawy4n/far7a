@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Copy, ExternalLink, Link2, Mail, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
+import { Mail, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import { AdminLayout } from "@/components/admin/AdminLayout";
@@ -9,14 +9,9 @@ import { DataTable, type Column } from "@/components/admin/DataTable";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { InvitationActionsMenu } from "@/components/invitations/InvitationActionsMenu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -31,7 +26,6 @@ import {
   duplicateInvitation,
   EVENT_TYPES,
   listInvitations,
-  publicUrl,
   STATUSES,
   type InvitationWithRelations,
 } from "@/lib/invitations";
@@ -79,10 +73,6 @@ function InvitationsPage() {
     });
   }, [data, search, status, type]);
 
-  async function copyLink(slug: string) {
-    await navigator.clipboard.writeText(publicUrl(slug));
-    toast.success(t("linkCopied"));
-  }
 
   const columns: Column<InvitationWithRelations>[] = [
     {
@@ -111,42 +101,11 @@ function InvitationsPage() {
       header: t("actions"),
       className: "text-end",
       cell: (row) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <MoreHorizontal className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild>
-              <Link to="/admin/invitations/$id" params={{ id: row.id }}>
-                <Pencil className="size-4" />
-                {t("edit")}
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild disabled={row.status !== "published"}>
-              <a href={`/i/${row.slug}`} target="_blank" rel="noreferrer">
-                <ExternalLink className="size-4" />
-                {t("view")}
-              </a>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => copyLink(row.slug)}>
-              <Link2 className="size-4" />
-              {t("copyLink")}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => duplicateMutation.mutate(row.id)}>
-              <Copy className="size-4" />
-              {t("duplicate")}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-destructive focus:text-destructive"
-              onClick={() => setPendingDelete(row)}
-            >
-              <Trash2 className="size-4" />
-              {t("delete")}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <InvitationActionsMenu
+          row={row}
+          onDuplicate={() => duplicateMutation.mutate(row.id)}
+          onDelete={() => setPendingDelete(row)}
+        />
       ),
     },
   ];

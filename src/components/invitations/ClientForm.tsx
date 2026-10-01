@@ -18,13 +18,15 @@ export function ClientForm({
   onSubmit,
   submitting,
   onCancel,
+  initial,
 }: {
   onSubmit: (values: ClientFormValues) => unknown;
   submitting?: boolean;
   onCancel?: () => void;
+  initial?: ClientFormValues;
 }) {
   const { t } = useI18n();
-  const [values, setValues] = useState<ClientFormValues>(EMPTY);
+  const [values, setValues] = useState<ClientFormValues>(initial ?? EMPTY);
 
   function set<K extends keyof ClientFormValues>(key: K, value: string) {
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -37,7 +39,7 @@ export function ClientForm({
         event.preventDefault();
         if (!values.full_name.trim()) return;
         await onSubmit(values);
-        setValues(EMPTY);
+        if (!initial) setValues(EMPTY);
       }}
     >
       <div className="grid gap-4 sm:grid-cols-2">
