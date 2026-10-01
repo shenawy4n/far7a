@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Plus, Trash2, Users } from "lucide-react";
+import { Pencil, Plus, Trash2, Users } from "lucide-react";
 import { toast } from "sonner";
 
 import { AdminLayout } from "@/components/admin/AdminLayout";
@@ -12,31 +12,46 @@ import { ClientForm, type ClientFormValues } from "@/components/invitations/Clie
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useI18n } from "@/lib/i18n";
-import { createClient, deleteClient, listClients, type Client } from "@/lib/invitations";
+import { createClient, deleteClient, listClients, updateClient, type Client } from "@/lib/invitations";
 
 export const Route = createFileRoute("/admin/clients/")({
   component: ClientsPage,
 });
+
+export function clientPatch(values: ClientFormValues) {
+  return {
+    full_name: values.full_name.trim(),
+    phone: values.phone.trim() || null,
+    email: values.email.trim() || null,
+    notes: values.notes.trim() || null,
+  };
+}
+
+export function clientToForm(client: Client): ClientFormValues {
+  return {
+    full_name: client.full_name,
+    phone: client.phone ?? "",
+    email: client.email ?? "",
+    notes: client.notes ?? "",
+  };
+}
 
 function ClientsPage() {
   const { t } = useI18n();
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery({ queryKey: ["clients"], queryFn: listClients });
   const [dialog, setDialog] = useState(false);
+  const [editing, setEditing] = useState<Client | null>(null);
   const [pendingDelete, setPendingDelete] = useState<Client | null>(null);
 
-  const createMutation = useMutation({
+  const saveMutation = useMutation({
     mutationFn: (values: ClientFormValues) =>
-      createClient({
-        full_name: values.full_name.trim(),
-        phone: values.phone.trim() || null,
-        email: values.email.trim() || null,
-        notes: values.notes.trim() || null,
-      }),
+      editing ? updateClient(editing.id, clientPatch(values)) : createClient(clientPatch(values)),
     onSuccess: () => {
       toast.success(t("saved"));
       queryClient.invalidateQueries({ queryKey: ["clients"] });
       setDialog(false);
+      setEditing(null);
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -50,15 +65,22 @@ function ClientsPage() {
     onError: (error: Error) => toast.error(error.message),
   });
 
+  function openCreate() {
+    setEditing(null);
+    setDialog(true);
+  }
+
   const columns: Column<Client>[] = [
-    { key: "name", header: t("fullName"), cell: (row) => row.full_name },
     {
-      key: "phone",
-      header: t("phone"),
+      key: "name",
+      header: t("fullName"),
       cell: (row) => (
-        <span dir="ltr">{row.phone ?? "—"}</span>
+        <Link to="/admin/clients/$id" params={{ id: row.id }} className="font-medium hover:underline">
+          {row.full_name}
+        </Link>
       ),
     },
+    { key: "phone", header: t("phone"), cell: (row) => <span dir="ltr">{row.phone ?? "—"}</span> },
     { key: "email", header: t("email"), cell: (row) => <span dir="ltr">{row.email ?? "—"}</span> },
     { key: "notes", header: t("notes"), cell: (row) => row.notes ?? "—" },
     {
@@ -66,9 +88,22 @@ function ClientsPage() {
       header: t("actions"),
       className: "text-end",
       cell: (row) => (
-        <Button variant="ghost" size="icon" onClick={() => setPendingDelete(row)}>
-          <Trash2 className="size-4 text-destructive" />
-        </Button>
+        <div className="flex justify-end gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={t("editClient")}
+            onClick={() => {
+              setEditing(row);
+              setDialog(true);
+            }}
+          >
+            <Pencil className="size-4" />
+          </Button>
+          <Button variant="ghost" size="icon" aria-label={t("delete")} onClick={() => setPendingDelete(row)}>
+            <Trash2 className="size-4 text-destructive" />
+          </Button>
+        </div>
       ),
     },
   ];
@@ -77,7 +112,7 @@ function ClientsPage() {
     <AdminLayout
       title={t("clients")}
       actions={
-        <Button size="sm" className="gap-2" onClick={() => setDialog(true)}>
+        <Button size="sm" className="gap-2" onClick={openCreate}>
           <Plus className="size-4" />
           {t("addClient")}
         </Button>
@@ -88,7 +123,7 @@ function ClientsPage() {
           icon={Users}
           title={t("emptyClients")}
           description={t("emptyClientsBody")}
-          action={<Button onClick={() => setDialog(true)}>{t("addClient")}</Button>}
+          action={<Button onClick={openCreate}>{t("addClient")}</Button>}
         />
       ) : (
         <DataTable
@@ -100,14 +135,22 @@ function ClientsPage() {
         />
       )}
 
-      <Dialog open={dialog} onOpenChange={setDialog}>
+      <Dialog
+        open={dialog}
+        onOpenChange={(open) => {
+          setDialog(open);
+          if (!open) setEditing(null);
+        }}
+      >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t("newClient")}</DialogTitle>
+            <DialogTitle>{editing ? t("editClient") : t("newClient")}</DialogTitle>
           </DialogHeader>
           <ClientForm
-            submitting={createMutation.isPending}
-            onSubmit={(values) => createMutation.mutateAsync(values)}
+            key={editing?.id ?? "new"}
+            initial={editing ? clientToForm(editing) : undefined}
+            submitting={saveMutation.isPending}
+            onSubmit={(values) => saveMutation.mutateAsync(values)}
             onCancel={() => setDialog(false)}
           />
         </DialogContent>
