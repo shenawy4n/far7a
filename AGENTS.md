@@ -18,3 +18,4 @@
 - Invitation content is data (`invitations` + `invitation_sections` + `media` + `templates`), never hardcoded per page: one template → many invitations.
 - UI text goes through `src/lib/i18n.tsx` (Arabic default, RTL; English switchable). No hardcoded colors in components — only tokens from `src/styles.css`.
 - Admin UI lives in `src/components/admin`, invitation forms in `src/components/invitations`, public rendering in `src/components/public`; data access in `src/lib/invitations.ts`.
+- Invitations render through one `InvitationRenderer` (`src/components/public`) that maps `templates.slug` to a template component; the public page and the admin preview (`/admin/invitations/$id/preview`) both use it, so adding a template is one component plus one registry entry.
