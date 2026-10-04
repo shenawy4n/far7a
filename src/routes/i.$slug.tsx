@@ -52,7 +52,7 @@ function Unavailable() {
 }
 
 function PublicInvitationPage() {
-  const { invitation, sections } = Route.useLoaderData();
+  const { invitation, sections, theme, media } = Route.useLoaderData();
   if (!invitation) return <Unavailable />;
-  return <InvitationRenderer invitation={invitation} sections={sections} />;
+  return <InvitationRenderer invitation={invitation} sections={sections} theme={theme} media={media} />;
 }

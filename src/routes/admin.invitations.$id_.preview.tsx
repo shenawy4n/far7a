@@ -7,7 +7,7 @@ import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useI18n } from "@/lib/i18n";
-import { getInvitation, listVisibleSections, toPublicShape } from "@/lib/invitations";
+import { getInvitation, listMedia, listVisibleSections, toPublicShape, toThemePayload } from "@/lib/invitations";
 import type { PublicInvitation, PublicSection } from "@/lib/public-invitation.functions";
 
 // Lives under /admin (auth-gated layout); data is read with the admin's session, so RLS
@@ -27,6 +27,7 @@ function PreviewPage() {
     queryKey: ["invitation-sections", id],
     queryFn: () => listVisibleSections(id),
   });
+  const media = useQuery({ queryKey: ["invitation-media", id], queryFn: () => listMedia(id) });
 
   const row = invitation.data;
   return (
@@ -49,6 +50,8 @@ function PreviewPage() {
         <InvitationRenderer
           invitation={toPublicShape(row) as PublicInvitation}
           sections={(sections.data ?? []) as PublicSection[]}
+          theme={toThemePayload(row)}
+          media={media.data ?? []}
         />
       ) : (
         <p className="p-6 text-center text-sm text-muted-foreground">{t("notFound")}</p>
