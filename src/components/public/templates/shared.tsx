@@ -1,11 +1,4 @@
 import type { MapPin } from "lucide-react";
-import type { PublicInvitation, PublicSection } from "@/lib/public-invitation.functions";
-
-/** Props every invitation template receives — the full public data contract. */
-export type TemplateProps = {
-  invitation: PublicInvitation;
-  sections: PublicSection[];
-};
 
 export function formatDate(date: string | null) {
   if (!date) return null;

@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
+import type { Database, Json } from "@/integrations/supabase/types";
 
 export type Invitation = Database["public"]["Tables"]["invitations"]["Row"];
 export type InvitationInsert = Database["public"]["Tables"]["invitations"]["Insert"];
@@ -13,11 +13,11 @@ export const STATUSES: InvitationStatus[] = ["draft", "published", "archived"];
 
 export type InvitationWithRelations = Invitation & {
   clients: Pick<Client, "id" | "full_name"> | null;
-  templates: Pick<Template, "id" | "name" | "slug"> | null;
+  templates: Pick<Template, "id" | "name" | "slug" | "settings"> | null;
 };
 
 const SELECT_WITH_RELATIONS =
-  "*, clients ( id, full_name ), templates ( id, name, slug )";
+  "*, clients ( id, full_name ), templates ( id, name, slug, settings )";
 
 function unwrap<T>({ data, error }: { data: T | null; error: { message: string } | null }): T {
   if (error) throw new Error(error.message);
@@ -123,6 +123,22 @@ export function toPublicShape(row: InvitationWithRelations) {
     cover_image_url: row.cover_image_url,
     template_slug: row.templates?.slug ?? null,
   };
+}
+
+export async function listMedia(invitationId: string) {
+  return unwrap(
+    await supabase
+      .from("media")
+      .select("file_url, file_type, sort_order")
+      .eq("invitation_id", invitationId)
+      .order("sort_order"),
+  );
+}
+
+/** Same theme payload shape the public RPC returns: template defaults + invitation overrides. */
+export function toThemePayload(row: InvitationWithRelations) {
+  const settings = (row.templates?.settings ?? {}) as Record<string, Json>;
+  return { layout: settings.layout ?? null, theme: settings.theme ?? {}, overrides: row.theme_overrides };
 }
 
 export function slugBase(groom?: string | null, bride?: string | null, title?: string | null) {

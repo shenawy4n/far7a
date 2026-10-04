@@ -111,6 +111,7 @@ export type Database = {
           slug: string
           status: Database["public"]["Enums"]["invitation_status"]
           template_id: string | null
+          theme_overrides: Json
           title: string | null
           transportation_info: string | null
           updated_at: string
@@ -136,6 +137,7 @@ export type Database = {
           slug: string
           status?: Database["public"]["Enums"]["invitation_status"]
           template_id?: string | null
+          theme_overrides?: Json
           title?: string | null
           transportation_info?: string | null
           updated_at?: string
@@ -161,6 +163,7 @@ export type Database = {
           slug?: string
           status?: Database["public"]["Enums"]["invitation_status"]
           template_id?: string | null
+          theme_overrides?: Json
           title?: string | null
           transportation_info?: string | null
           updated_at?: string
@@ -314,6 +317,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      default_template_sections: { Args: never; Returns: Json }
       generate_invitation_slug: { Args: { _base: string }; Returns: string }
       get_public_invitation: {
         Args: { _slug: string }
@@ -337,6 +341,14 @@ export type Database = {
           venue_name: string
         }[]
       }
+      get_public_invitation_media: {
+        Args: { _slug: string }
+        Returns: {
+          file_type: string
+          file_url: string
+          sort_order: number
+        }[]
+      }
       get_public_invitation_sections: {
         Args: { _slug: string }
         Returns: {
@@ -347,12 +359,17 @@ export type Database = {
           title: string
         }[]
       }
+      get_public_invitation_theme: { Args: { _slug: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      initialize_invitation_sections: {
+        Args: { _invitation_id: string }
+        Returns: number
       }
       is_admin: { Args: never; Returns: boolean }
       slugify: { Args: { _input: string }; Returns: string }

@@ -143,3 +143,8 @@
     transparent
   );
 }
+
+/* Invitation renderer: heading font comes from the resolved theme. */
+[data-invitation] .font-display {
+  font-family: var(--inv-font-heading);
+}
