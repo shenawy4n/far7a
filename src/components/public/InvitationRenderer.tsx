@@ -40,8 +40,7 @@ export type InvitationRendererProps = {
  */
 export function InvitationRenderer({ invitation, sections, theme, media = [] }: InvitationRendererProps) {
   const fallback = resolveTemplate(invitation.template_slug);
-  // A missing template (no slug) always renders the default layout.
-  const resolved = resolveTheme(invitation.template_slug ? (theme ?? null) : null, fallback);
+  const resolved = resolveTheme(theme ?? null, fallback);
   const variant = resolved.layout;
   const ordered = orderSections(sections);
 
