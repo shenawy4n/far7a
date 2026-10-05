@@ -57,6 +57,11 @@ export function InvitationRenderer({ invitation, sections, theme, media = [] }: 
         }`}
       >
         <div className={SECTION_SPACING[resolved.theme.layout.sectionSpacing]}>
+          {ordered.length === 0 ? (
+            <p className="py-24 text-center text-sm text-muted-foreground">
+              لا توجد تفاصيل معروضة في هذه الدعوة حالياً.
+            </p>
+          ) : null}
           {ordered.map((section) => (
             <SectionRenderer
               key={section.section_type}

@@ -158,17 +158,13 @@ export function themeToStyle(theme: Theme): CSSProperties {
   return style as CSSProperties;
 }
 
-/** Ordered sections to render; falls back to the default order when none are stored. */
+/**
+ * Ordered sections to render. Invitation section rows are the source of truth:
+ * hidden rows are never rendered and an empty list stays empty (no default fallback —
+ * template defaults are only used by the DB when initializing missing sections).
+ */
 export function orderSections(sections: RenderSection[]): RenderSection[] {
-  const known = sections.filter((s) => SECTION_TYPES.includes(s.section_type as SectionType));
-  if (known.length === 0) {
-    return DEFAULT_SECTIONS.map((s, i) => ({
-      section_type: s.type,
-      title: null,
-      content: null,
-      sort_order: (i + 1) * 10,
-      settings: {},
-    }));
-  }
-  return [...known].sort((a, b) => a.sort_order - b.sort_order);
+  return sections
+    .filter((s) => SECTION_TYPES.includes(s.section_type as SectionType))
+    .sort((a, b) => a.sort_order - b.sort_order);
 }
