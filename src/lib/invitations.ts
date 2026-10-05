@@ -138,7 +138,7 @@ export async function listMedia(invitationId: string) {
 /** Same theme payload shape the public RPC returns: template defaults + invitation overrides. */
 export function toThemePayload(row: InvitationWithRelations) {
   const settings = (row.templates?.settings ?? {}) as Record<string, Json>;
-  return { layout: settings.layout ?? null, theme: settings.theme ?? {}, overrides: row.theme_overrides };
+  return { layout: settings["layout"] ?? null, theme: settings["theme"] ?? {}, overrides: row.theme_overrides };
 }
 
 export function slugBase(groom?: string | null, bride?: string | null, title?: string | null) {
