@@ -4,7 +4,7 @@ import type { Json } from "@/integrations/supabase/types";
 /**
  * Template engine model.
  * templates.settings = { layout, theme, sections }  (template defaults)
- * invitations.theme_overrides = Partial<Theme>       (per-invitation overrides)
+ * invitations["theme"]_overrides = Partial<Theme>       (per-invitation overrides)
  * Renderer = deep-merge(defaults, template theme, overrides) → CSS variables.
  */
 
@@ -98,24 +98,24 @@ function pick<T extends string>(v: unknown, allowed: readonly T[], fallback: T):
 function mergeTheme(base: Theme, raw: unknown): Theme {
   const o = obj(raw);
   const colors = { ...base.colors };
-  for (const [k, v] of Object.entries(obj(o.colors))) {
+  for (const [k, v] of Object.entries(obj(o["colors"]))) {
     if (k in COLOR_VARS && typeof v === "string" && SAFE_COLOR.test(v.trim())) {
       colors[k as keyof ThemeColors] = v.trim();
     }
   }
-  const ty = obj(o.typography);
-  const ly = obj(o.layout);
+  const ty = obj(o["typography"]);
+  const ly = obj(o["layout"]);
   const fonts = ["display", "sans", "serif"] as const;
   return {
     colors,
     typography: {
-      heading: pick(ty.heading, fonts, base.typography.heading),
-      body: pick(ty.body, fonts, base.typography.body),
+      heading: pick(ty["heading"], fonts, base.typography.heading),
+      body: pick(ty["body"], fonts, base.typography.body),
     },
     layout: {
-      contentWidth: pick(ly.contentWidth, ["narrow", "medium", "wide"] as const, base.layout.contentWidth),
+      contentWidth: pick(ly["contentWidth"], ["narrow", "medium", "wide"] as const, base.layout.contentWidth),
       sectionSpacing: pick(
-        ly.sectionSpacing,
+        ly["sectionSpacing"],
         ["compact", "normal", "relaxed"] as const,
         base.layout.sectionSpacing,
       ),
@@ -126,15 +126,15 @@ function mergeTheme(base: Theme, raw: unknown): Theme {
 /** Parse templates.settings into a full config with safe defaults. */
 export function parseTemplateConfig(settings: unknown, fallbackLayout: LayoutVariant = "classic"): TemplateConfig {
   const s = obj(settings);
-  const sections = Array.isArray(s.sections)
-    ? (s.sections as unknown[])
+  const sections = Array.isArray(s["sections"])
+    ? (s["sections"] as unknown[])
         .map((x) => obj(x))
-        .filter((x) => SECTION_TYPES.includes(x.type as SectionType))
-        .map((x) => ({ type: x.type as SectionType, visible: x.visible !== false }))
+        .filter((x) => SECTION_TYPES.includes(x["type"] as SectionType))
+        .map((x) => ({ type: x["type"] as SectionType, visible: x["visible"] !== false }))
     : DEFAULT_SECTIONS;
   return {
-    layout: pick(s.layout, LAYOUTS, fallbackLayout),
-    theme: mergeTheme(DEFAULT_THEME, s.theme),
+    layout: pick(s["layout"], LAYOUTS, fallbackLayout),
+    theme: mergeTheme(DEFAULT_THEME, s["theme"]),
     sections: sections.length ? sections : DEFAULT_SECTIONS,
   };
 }

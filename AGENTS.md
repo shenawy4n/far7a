@@ -18,4 +18,6 @@
 - Invitation content is data (`invitations` + `invitation_sections` + `media` + `templates`), never hardcoded per page: one template → many invitations.
 - UI text goes through `src/lib/i18n.tsx` (Arabic default, RTL; English switchable). No hardcoded colors in components — only tokens from `src/styles.css`.
 - Admin UI lives in `src/components/admin`, invitation forms in `src/components/invitations`, public rendering in `src/components/public`; data access in `src/lib/invitations.ts`.
-- Invitations render through one `InvitationRenderer` (`src/components/public`) that maps `templates.slug` to a template component; the public page and the admin preview (`/admin/invitations/$id/preview`) both use it, so adding a template is one component plus one registry entry.
+
+- Invitations render through one `InvitationRenderer` (Invitation → template layout → theme → ordered `invitation_sections` → section components in `src/components/public/sections`); theme = `templates.settings.theme` merged with `invitations.theme_overrides` in `src/lib/template-engine.ts`, so templates are data and both public page and admin preview share it.
+- Sections are initialized by the DB trigger `initialize_invitation_sections` (unique per invitation+type, insert-missing only) so template switches never delete or duplicate data.
